@@ -44,40 +44,40 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA5aaaNXI9qInR70DEZ-R5l7J4ty3T2jSg',
-    appId: '1:763306286589:web:af06669bfbb79971530d94',
-    messagingSenderId: '763306286589',
-    projectId: 'ipssi072023montevrain',
-    authDomain: 'ipssi072023montevrain.firebaseapp.com',
-    storageBucket: 'ipssi072023montevrain.appspot.com',
-    measurementId: 'G-3P6FEV1F86',
+    apiKey: 'AIzaSyC27jK9mhrCe1Y_um9Tr0iw3Rt9cbzpgdY',
+    appId: '1:98584794528:web:c0df0f22bdc88ca3c280c5',
+    messagingSenderId: '98584794528',
+    projectId: 'ipssien2023',
+    authDomain: 'ipssien2023.firebaseapp.com',
+    storageBucket: 'ipssien2023.appspot.com',
+    measurementId: 'G-LQERYNPXCN',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB_QnaW89sguCTlXEICYcGRKQ2RTvyi2vg',
-    appId: '1:763306286589:android:70726b296d9def4f530d94',
-    messagingSenderId: '763306286589',
-    projectId: 'ipssi072023montevrain',
-    storageBucket: 'ipssi072023montevrain.appspot.com',
+    apiKey: 'AIzaSyCQ9O9YCmWDeI3y_pYLuTSh-tmSk9hFxxI',
+    appId: '1:98584794528:android:ec036cd1f5066a58c280c5',
+    messagingSenderId: '98584794528',
+    projectId: 'ipssien2023',
+    storageBucket: 'ipssien2023.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDPzH8Kqvg9pbyjpbN9CGtSyCMjnTNPJFk',
-    appId: '1:763306286589:ios:84ff4841dc092a39530d94',
-    messagingSenderId: '763306286589',
-    projectId: 'ipssi072023montevrain',
-    storageBucket: 'ipssi072023montevrain.appspot.com',
-    iosClientId: '763306286589-9a1gqefuuslpg8rlqr2omeup2kbv2lnd.apps.googleusercontent.com',
+    apiKey: 'AIzaSyA9DiwMGkv_YYegYpf2OqTkgrgDUFENRyI',
+    appId: '1:98584794528:ios:d2a8c7f03a05e9e6c280c5',
+    messagingSenderId: '98584794528',
+    projectId: 'ipssien2023',
+    storageBucket: 'ipssien2023.appspot.com',
+    iosClientId: '98584794528-8aqn9ci9dh28tcamqc5961mugvf097so.apps.googleusercontent.com',
     iosBundleId: 'com.example.ipssi2023montevrain',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDPzH8Kqvg9pbyjpbN9CGtSyCMjnTNPJFk',
-    appId: '1:763306286589:ios:84ff4841dc092a39530d94',
-    messagingSenderId: '763306286589',
-    projectId: 'ipssi072023montevrain',
-    storageBucket: 'ipssi072023montevrain.appspot.com',
-    iosClientId: '763306286589-9a1gqefuuslpg8rlqr2omeup2kbv2lnd.apps.googleusercontent.com',
+    apiKey: 'AIzaSyA9DiwMGkv_YYegYpf2OqTkgrgDUFENRyI',
+    appId: '1:98584794528:ios:d2a8c7f03a05e9e6c280c5',
+    messagingSenderId: '98584794528',
+    projectId: 'ipssien2023',
+    storageBucket: 'ipssien2023.appspot.com',
+    iosClientId: '98584794528-8aqn9ci9dh28tcamqc5961mugvf097so.apps.googleusercontent.com',
     iosBundleId: 'com.example.ipssi2023montevrain',
   );
 }

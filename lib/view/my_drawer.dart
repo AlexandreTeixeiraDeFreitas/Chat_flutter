@@ -160,7 +160,6 @@ class _MyDrawerState extends State<MyDrawer> {
                 leading: Icon(Icons.mail),
                 title: Text(moi.mail),
               ),
-              
               //pseudo
               
               //mail

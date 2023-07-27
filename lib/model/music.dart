@@ -23,4 +23,5 @@ class MyMusic {
 
   }
   MyMusic.build({required this.title,this.image,required this.artist,required this.uid,this.album,required this.file});
+
 }

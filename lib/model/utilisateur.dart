@@ -2,6 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ipssi2023montevrain/globale.dart';
 
+import 'music.dart';
+
 class MyUser {
   //attributs
   late String lastName;
@@ -70,9 +72,46 @@ class MyUser {
 
   }
 
+  Future<bool> isFavorite(String musicId) async {
+    DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection('UTILISATEURS').doc(this.uid).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+      this.favoris = List<String>.from(data['FAVORIS'] ?? []);
+      return this.favoris!.contains(musicId);
+    } else {
+      return false;
+    }
+  }
 
 
 
-  //méthodes
+
+  Future<void> addToFavorites(String musicId) async {
+    this.favoris!.add(musicId);
+    await FirebaseFirestore.instance.collection('UTILISATEURS').doc(this.uid).update({
+      'FAVORIS': this.favoris,
+    });
+  }
+  Future<void> removeFromFavorites(String musicId) async {
+    this.favoris!.remove(musicId);
+    await FirebaseFirestore.instance.collection('UTILISATEURS').doc(this.uid).update({
+      'FAVORIS': this.favoris,
+    });
+
+  }
+
+  Future<List<String>> getFavorites() async {
+    DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection('UTILISATEURS').doc(this.uid).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+      return List<String>.from(data['FAVORIS'] ?? []);
+    }
+    return [];
+  }
+
+
+
+
+//méthodes
 
 }

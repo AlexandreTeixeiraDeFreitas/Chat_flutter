@@ -43,6 +43,7 @@ dependencies:
   file_picker:
   permission_handler:
   audioplayers:
+  http:
 
 dev_dependencies:
   flutter_test:

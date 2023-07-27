@@ -3,6 +3,8 @@ import 'package:ipssi2023montevrain/controller/all_music.dart';
 import 'package:ipssi2023montevrain/controller/background_controller.dart';
 import 'package:ipssi2023montevrain/view/my_drawer.dart';
 
+import 'my_page_favori.dart';
+
 class MySecondePage extends StatefulWidget {
   const MySecondePage({super.key});
 
@@ -66,8 +68,8 @@ class _MySecondePageState extends State<MySecondePage> {
 
   Widget bodyPage(){
     switch(index){
-      case 0 : return const AllMusic();
-      case 1: return Text("Afficher mes favoris");
+      case 0 : return const Text("coucou");
+      case 1: return Text("coucou");
       default : return Text("coucou");
     }
 
