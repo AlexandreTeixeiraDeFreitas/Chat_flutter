@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ipssi2023montevrain/controller/background_controller.dart';
 import 'package:ipssi2023montevrain/globale.dart';
 import 'package:ipssi2023montevrain/model/Message.dart';
-import 'package:ipssi2023montevrain/model/utilisateur.dart';
 
 class Messagerie extends StatefulWidget {
   const Messagerie({Key? key}) : super(key: key);
@@ -15,6 +13,7 @@ class Messagerie extends StatefulWidget {
 
 class _MessagerieState extends State<Messagerie> {
   final TextEditingController _messageController = TextEditingController();
+  bool _isButtonPressed = false;
 
   @override
   void dispose() {
@@ -52,7 +51,7 @@ class _MessagerieState extends State<Messagerie> {
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text('Loading...');
+                      return Center(child: CircularProgressIndicator());
                     }
 
                     List<Message> messages = snapshot.data ?? [];
@@ -62,32 +61,35 @@ class _MessagerieState extends State<Messagerie> {
                       itemBuilder: (context, index) {
                         Message message = messages[messages.length - index - 1];
                         bool isCurrentUser = message.userUid == moi.uid;
-                        return Align(
-                          alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
-                          child: Container(
-                            padding: const EdgeInsets.all(10.0),
-                            margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                            decoration: BoxDecoration(
-                              color: isCurrentUser ? Colors.blue[100] : Colors.green[100],
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  message.userPseudo,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black54,
+                        return MyAnimationController(
+                          delay: index,
+                          child: Align(
+                            alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.all(10.0),
+                              margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                              decoration: BoxDecoration(
+                                color: isCurrentUser ? Colors.blue[100] : Colors.green[100],
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    message.userPseudo,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black54,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  message.message,
-                                  style: TextStyle(
-                                    color: Colors.black,
+                                  Text(
+                                    message.message,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -115,11 +117,20 @@ class _MessagerieState extends State<Messagerie> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.send),
+                      color: _isButtonPressed ? Colors.green : Colors.blue,
                       onPressed: () {
+                        setState(() {
+                          _isButtonPressed = true;
+                        });
                         if (_messageController.text.isNotEmpty) {
                           _addMessage(moi.uid, moi.nickName, _messageController.text);
                           _messageController.clear();
                         }
+                        Future.delayed(Duration(milliseconds: 200), () {
+                          setState(() {
+                            _isButtonPressed = false;
+                          });
+                        });
                       },
                     ),
                   ],
@@ -133,3 +144,51 @@ class _MessagerieState extends State<Messagerie> {
   }
 }
 
+class MyAnimationController extends StatefulWidget {
+  int delay;
+  Widget child;
+  MyAnimationController({required this.delay, required this.child, Key? key}): super(key: key);
+
+  @override
+  _MyAnimationControllerState createState() => _MyAnimationControllerState();
+}
+
+class _MyAnimationControllerState extends State<MyAnimationController> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> animationOffset;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
+    CurvedAnimation animationCurved = CurvedAnimation(parent: _controller, curve: Curves.decelerate);
+    animationOffset = Tween<Offset>(
+      begin: const Offset(0, -5),
+      end: Offset.zero,
+    ).animate(animationCurved);
+
+    Timer(Duration(milliseconds: widget.delay), () {
+      _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _controller,
+      child: SlideTransition(
+        position: animationOffset,
+        child: widget.child,
+      ),
+    );
+  }
+}
