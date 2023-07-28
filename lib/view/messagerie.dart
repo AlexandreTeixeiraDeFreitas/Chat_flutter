@@ -14,33 +14,12 @@ class Messagerie extends StatefulWidget {
 }
 
 class _MessagerieState extends State<Messagerie> {
-  List<Message> messages = [];
   final TextEditingController _messageController = TextEditingController();
-  Timer? timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchMessages();
-    timer = Timer.periodic(Duration(milliseconds: 200), (timer) {
-      _updateMessages();
-    });
-  }
 
   @override
   void dispose() {
-    timer?.cancel();
+    _messageController.dispose();
     super.dispose();
-  }
-
-  Future<void> _fetchMessages() async {
-    messages = await Message.getAllMessages();
-    setState(() {});
-  }
-
-  Future<void> _updateMessages() async {
-    messages = await Message.getNewMessages(messages);
-    setState(() {});
   }
 
   Future<void> _addMessage(String userUid, String userPseudo, String messageContent) async {
@@ -48,11 +27,7 @@ class _MessagerieState extends State<Messagerie> {
     message.userUid = userUid;
     message.userPseudo = userPseudo;
     message.message = messageContent;
-    setState(() {
-      messages.insert(0, message); // Insert the message at the start of the list
-    });
     await message.addMessageToDatabase();
-    _updateMessages();
   }
 
   @override
@@ -69,40 +44,54 @@ class _MessagerieState extends State<Messagerie> {
           body: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  reverse: true,
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    Message message = messages[messages.length - index - 1];
-                    bool isCurrentUser = message.userUid == moi.uid;
-                    return Align(
-                      alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                        decoration: BoxDecoration(
-                          color: isCurrentUser ? Colors.blue[100] : Colors.green[100],
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              message.userPseudo,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black54,
-                              ),
+                child: StreamBuilder<List<Message>>(
+                  stream: Message.getAllMessagesStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Something went wrong: ${snapshot.error}');
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Text('Loading...');
+                    }
+
+                    List<Message> messages = snapshot.data ?? [];
+                    return ListView.builder(
+                      reverse: true,
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        Message message = messages[messages.length - index - 1];
+                        bool isCurrentUser = message.userUid == moi.uid;
+                        return Align(
+                          alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                            decoration: BoxDecoration(
+                              color: isCurrentUser ? Colors.blue[100] : Colors.green[100],
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                            Text(
-                              message.message,
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  message.userPseudo,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                Text(
+                                  message.message,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -111,7 +100,7 @@ class _MessagerieState extends State<Messagerie> {
                 width: MediaQuery.of(context).size.width * 0.75,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),  // Set border radius here
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
@@ -143,3 +132,4 @@ class _MessagerieState extends State<Messagerie> {
     );
   }
 }
+

@@ -39,16 +39,18 @@ class Message {
   }
 
 
-  static Future<List<Message>> getAllMessages() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  static Stream<List<Message>> getAllMessagesStream() {
+    return FirebaseFirestore.instance
         .collection('MESSAGES')
         .orderBy('dateTime')
-        .get();
-
-    return querySnapshot.docs
-        .map((doc) => Message.fromDatabase(doc))
-        .toList();
+        .snapshots()
+        .map((QuerySnapshot querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return Message.fromDatabase(doc);
+      }).toList() as List<Message>;
+    });
   }
+
 
   Future<void> addMessageToDatabase() async {
     await FirebaseFirestore.instance.collection('MESSAGES').add(
