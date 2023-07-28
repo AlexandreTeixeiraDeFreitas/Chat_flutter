@@ -6,7 +6,7 @@ class Message {
   late String userUid; // uid of the user who sent the message
   late String userPseudo;
   late String message; // Message content
-  DateTime? dateTime; // Date and time when the message was sent
+  late DateTime dateTime; // Date and time when the message was sent
 
   // Constructors
   Message(){
